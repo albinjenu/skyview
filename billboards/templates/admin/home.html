@@ -1,0 +1,188 @@
+{% extends 'billboards/base.html' %}
+
+{% block title %}Sky View Billboard - Premium Outdoor Advertising in Kerala{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-badge">🌴 Kerala's #1 Billboard Network</div>
+        <h1>
+            Premium <span class="highlight">Billboard</span><br>
+            Advertising Across Kerala
+        </h1>
+        <p>
+            Maximize your brand visibility with strategic billboard placements across
+            Kerala. From bustling town centers to scenic tourist spots.
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="{% url 'billboards:list' %}" class="btn btn-primary">
+                📍 View All Billboards
+            </a>
+            <a href="#featured" class="btn btn-secondary">
+                ✨ Featured Locations
+            </a>
+        </div>
+    </section>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+        <div class="stat">
+            <div class="stat-value">{{ total_billboards }}+</div>
+            <div class="stat-label">Billboards</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">8</div>
+            <div class="stat-label">Locations</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">₹15K</div>
+            <div class="stat-label">Starting Rate</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">100%</div>
+            <div class="stat-label">Visibility</div>
+        </div>
+    </div>
+
+    <!-- Featured Billboards -->
+    <section id="featured" style="padding: 4rem 0;">
+        <div class="section-title">
+            <h2>Featured Billboards</h2>
+            <p>Prime advertising locations across Kerala</p>
+        </div>
+
+        <div class="grid grid-3">
+            {% for billboard in featured_billboards %}
+            <div class="card"
+                style="text-decoration: none; color: inherit; height: 100%; display: flex; flex-direction: column;">
+                {% if billboard.image %}
+                <a href="{% url 'billboards:detail' billboard.pk %}" class="card-image"
+                    style="background: url('{{ billboard.image.url }}') center/cover; position: relative; display: block; height: 180px; text-decoration: none;">
+                    <span class="card-badge {% if billboard.is_available %}available{% else %}unavailable{% endif %}">
+                        {% if billboard.is_available %}Available{% else %}Booked{% endif %}
+                    </span>
+                </a>
+                {% else %}
+                <a href="{% url 'billboards:detail' billboard.pk %}" class="card-image"
+                    style="background: url('https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400&h=200&fit=crop') center/cover; position: relative; display: block; height: 180px; text-decoration: none;">
+                    <span class="card-badge {% if billboard.is_available %}available{% else %}unavailable{% endif %}">
+                        {% if billboard.is_available %}Available{% else %}Booked{% endif %}
+                    </span>
+                </a>
+                {% endif %}
+
+                <div class="card-content" style="flex: 1; display: flex; flex-direction: column;">
+                    <div class="card-location">📍 {{ billboard.get_area_display }}</div>
+                    <h3><a href="{% url 'billboards:detail' billboard.pk %}"
+                            style="text-decoration: none; color: inherit;">{{ billboard.name }}</a></h3>
+
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                        <p style="color: var(--text-muted); font-size: 0.9rem; flex: 1; margin: 0;">{{
+                            billboard.location }}</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query={{ billboard.location|urlencode }},{{ billboard.get_area_display }},Kerala"
+                            target="_blank"
+                            style="text-decoration: none; font-size: 0.8rem; background: #f0f0f0; padding: 0.2rem 0.5rem; border-radius: 4px; color: var(--text);">🗺️
+                            Map</a>
+                    </div>
+
+                    {% if user.is_staff %}
+                    <div class="price-tag" style="margin-bottom: 1rem;">
+                        <span class="currency">Rs.</span>
+                        <span class="amount">{{ billboard.month_rate|floatformat:0 }}</span>
+                        <span class="period">/month</span>
+                    </div>
+                    <div class="card-stats">
+                        <div class="stat">
+                            <div class="stat-value">{{ billboard.sqft }}</div>
+                            <div class="stat-label">Sq.Ft</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">Rs.{{ billboard.rate_per_sqft }}</div>
+                            <div class="stat-label">Per Sq.Ft</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">Rs.{{ billboard.year_rate|floatformat:0 }}</div>
+                            <div class="stat-label">Year</div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="card-stats"
+                        style="border-top: 1px solid var(--border); padding-top: 1rem; margin-top: auto;">
+                        <div class="stat">
+                            <div class="stat-value">{{ billboard.sqft }}</div>
+                            <div class="stat-label">Square Feet</div>
+                        </div>
+                        <div class="stat" style="grid-column: span 2;">
+                            <a href="https://wa.me/919495806837?text=Hi,%20I%20want%20a%20board:%20{{ billboard.name|urlencode }}"
+                                target="_blank"
+                                style="text-decoration: none; display: block; background: #25d366; color: white; padding: 0.5rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600; text-align: center;">
+                                <i class="fab fa-whatsapp"></i> WhatsApp Us
+                            </a>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 4rem;">
+                <h3>No billboards available yet</h3>
+                <p style="color: var(--text-muted);">Check back soon for available billboard locations.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="{% url 'billboards:list' %}" class="btn btn-primary">
+                View All Billboards →
+            </a>
+        </div>
+    </section>
+
+    <!-- Areas Section -->
+    <section style="padding: 4rem 0;">
+        <div class="section-title">
+            <h2>Coverage Areas</h2>
+            <p>Strategic billboard locations across Kerala</p>
+        </div>
+
+        <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+            {% for area_code, area_name in areas %}
+            <a href="{% url 'billboards:list' %}?area={{ area_code }}" class="card"
+                style="text-decoration: none; color: inherit; padding: 2rem; text-align: center;">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">📍</div>
+                <h3 style="font-size: 1.1rem;">{{ area_name }}</h3>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section style="padding: 4rem 0;">
+        <div class="section-title">
+            <h2>Why Sky View Billboard?</h2>
+            <p>Kerala's trusted outdoor advertising partner</p>
+        </div>
+
+        <div class="grid grid-3">
+            <div class="card" style="padding: 2rem; text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🎯</div>
+                <h3>Prime Locations</h3>
+                <p style="color: var(--text-muted);">Strategic placements at high-traffic junctions and commercial areas
+                </p>
+            </div>
+            <div class="card" style="padding: 2rem; text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">💰</div>
+                <h3>Competitive Rates</h3>
+                <p style="color: var(--text-muted);">Flexible pricing with discounts for long-term bookings</p>
+            </div>
+            <div class="card" style="padding: 2rem; text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🛡️</div>
+                <h3>Full Support</h3>
+                <p style="color: var(--text-muted);">End-to-end service from design to installation and maintenance</p>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

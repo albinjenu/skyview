@@ -1,0 +1,100 @@
+{% extends 'billboards/base.html' %}
+
+{% block content %}
+<div class="card" style="display: flex; flex-direction: column; overflow: visible;">
+    <div style="width: 100%; height: 400px; overflow: hidden; border-radius: 12px 12px 0 0;">
+        {% if billboard.image %}
+        <img src="{{ billboard.image.url }}" alt="{{ billboard.title }}"
+            style="width: 100%; height: 100%; object-fit: cover;">
+        {% else %}
+        <div
+            style="width:100%; height:100%; background:#ddd; display:flex; align-items:center; justify-content:center;">
+            No Image</div>
+        {% endif %}
+    </div>
+
+    <div style="padding: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap;">
+            <div>
+                <h1 style="margin: 0; color: var(--primary); font-size: 2.5rem;">{{ billboard.title }}</h1>
+                <p style="font-size: 1.2rem; color: #666; margin-top: 0.5rem;"><span
+                        style="color:var(--accent);">📍</span> {{ billboard.location }}</p>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary);">{{ billboard.sqft }} sqft
+                </div>
+                <div style="font-size: 1.1rem; color: #666;">Size: {{ billboard.size }}</div>
+                {% if billboard.is_available %}
+                <span
+                    style="display: inline-block; background: #e6fffa; color: #047857; padding: 5px 10px; border-radius: 20px; font-size: 0.9rem; margin-top: 5px;">Available</span>
+                {% else %}
+                <span
+                    style="display: inline-block; background: #fff5f5; color: #c53030; padding: 5px 10px; border-radius: 20px; font-size: 0.9rem; margin-top: 5px;">Booked</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 2rem 0;">
+
+        <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 4rem;">
+            <div>
+                <h3 style="color: var(--primary);">Contact for Booking</h3>
+                <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px;">
+                    <p style="margin: 0 0 10px 0; font-size: 1.1rem;">
+                        <strong>Phone:</strong>
+                        <a href="tel:+919447266404" style="text-decoration:none; color:inherit;">9447266404</a>
+                    </p>
+                    <p style="margin: 0 0 10px 0; font-size: 1.1rem;">
+                        <strong>WhatsApp:</strong>
+                        <a href="https://wa.me/919495806837?text=Hi,%20I%20want%20a%20board:%20{{ billboard.title|urlencode }}"
+                            target="_blank" style="text-decoration:none; color:#25d366; font-weight:bold;">
+                            <i class="fab fa-whatsapp"></i> 9495806837
+                        </a>
+                    </p>
+                    <p style="margin: 0; font-size: 1.1rem;"><strong>Email:</strong> skyview230@gmail.com</p>
+                    <br>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <a href="https://wa.me/919495806837?text=Hi,%20I%20want%20a%20board:%20{{ billboard.title|urlencode }}"
+                            target="_blank" class="btn" style="background:#25d366; flex:1; text-align:center;">
+                            <i class="fab fa-whatsapp"></i> WhatsApp Us
+                        </a>
+                        <a href="mailto:skyview230@gmail.com" class="btn" style="flex:1; text-align:center;">
+                            <i class="fas fa-envelope"></i> Email Us
+                        </a>
+                    </div>
+                </div>
+
+                <h3 style="color: var(--primary); margin-top: 2rem;">Details</h3>
+                {% if billboard.description %}
+                <p style="color: #444; line-height: 1.6; margin-bottom: 1.5rem;">{{ billboard.description }}</p>
+                {% endif %}
+                <ul style="list-style: none; padding: 0; line-height: 1.8;">
+                    <li><strong>Dimensions:</strong> {{ billboard.size }}</li>
+                    <li><strong>Total Area:</strong> {{ billboard.sqft }} sqft</li>
+                    <li><strong>Monthly Rate:</strong> {% if billboard.price_per_month > 0 %}${{
+                        billboard.price_per_month }}{% else %}Contact for Price{% endif %}</li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 style="color: var(--primary);">Location Map</h3>
+                <div style="width: 100%; height: 300px; background: #eee; border-radius: 8px; overflow: hidden;">
+                    {% if billboard.map_url %}
+                    {% if "iframe" in billboard.map_url %}
+                    {{ billboard.map_url|safe }}
+                    {% else %}
+                    <iframe src="{{ billboard.map_url }}" width="100%" height="100%" style="border:0;"
+                        allowfullscreen="" loading="lazy"></iframe>
+                    {% endif %}
+                    {% else %}
+                    <div
+                        style="display: flex; align-items: center; justify-content: center; height: 100%; color: #888;">
+                        Map not available
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

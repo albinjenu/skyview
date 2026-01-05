@@ -1,0 +1,43 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Manage Bookings | Skyview Admin{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h2>Bookings Management</h2>
+    <a href="/admin/billboards/booking/add/" class="btn">+ New Booking</a>
+</div>
+
+<div class="card">
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="text-align: left; border-bottom: 2px solid var(--bg);">
+                <th style="padding: 1rem;">Customer</th>
+                <th style="padding: 1rem;">Billboard</th>
+                <th style="padding: 1rem;">Amount</th>
+                <th style="padding: 1rem;">Date</th>
+                <th style="padding: 1rem;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in bookings %}
+            <tr style="border-bottom: 1px solid #f0f0f0;">
+                <td style="padding: 1rem;"><strong>{{ booking.customer_name }}</strong></td>
+                <td style="padding: 1rem;">{{ booking.billboard.title }}</td>
+                <td style="padding: 1rem; color: var(--primary); font-weight: 700;">₹{{ booking.total_amount }}</td>
+                <td style="padding: 1rem;">{{ booking.created_at|date:"d M Y" }}</td>
+                <td style="padding: 1rem;">
+                    <a href="/admin/billboards/booking/{{ booking.id }}/change/"
+                        style="color: var(--secondary); margin-right: 10px;">Edit</a>
+                    <a href="#" style="color: var(--accent);">PDF</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="padding: 2rem; text-align: center; color: #888;">No bookings found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

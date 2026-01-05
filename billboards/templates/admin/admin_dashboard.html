@@ -1,0 +1,51 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Dashboard | Skyview Admin{% endblock %}
+
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>Total Billboards</h3>
+        <div class="value">{{ billboard_count|default:"39" }}</div>
+    </div>
+    <div class="stat-card">
+        <h3>Total Bookings</h3>
+        <div class="value">{{ booking_count|default:"1" }}</div>
+    </div>
+    <div class="stat-card">
+        <h3>Available Boards</h3>
+        <div class="value">{{ available_count|default:"38" }}</div>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 1.5rem;">Recent Activity</h3>
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="text-align: left; border-bottom: 2px solid var(--bg);">
+                <th style="padding: 1rem;">Action</th>
+                <th style="padding: 1rem;">Target</th>
+                <th style="padding: 1rem;">Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="padding: 1rem;">Created Booking</td>
+                <td style="padding: 1rem;">Shabdha Hearing Aid Center</td>
+                <td style="padding: 1rem;">Just now</td>
+            </tr>
+            <tr>
+                <td style="padding: 1rem;">Imported Boards</td>
+                <td style="padding: 1rem;">36 New Billboards</td>
+                <td style="padding: 1rem;">1 hour ago</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div style="display: flex; gap: 1rem;">
+    <a href="/admin/billboards/booking/" class="btn">Manage Bookings</a>
+    <a href="/admin/billboards/billboard/" class="btn"
+        style="background: var(--secondary); color: var(--primary);">Manage Billboards</a>
+</div>
+{% endblock %}

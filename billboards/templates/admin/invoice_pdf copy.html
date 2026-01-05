@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 0;
+            padding: 20px;
+            color: #000;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .company-name {
+            color: #cc0000;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .address {
+            font-size: 10px;
+            line-height: 1.4;
+        }
+
+        .tax-info {
+            text-align: right;
+            font-size: 10px;
+            line-height: 1.4;
+        }
+
+        .invoice-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin: 20px 0;
+            text-transform: uppercase;
+        }
+
+        .bill-to {
+            margin-bottom: 15px;
+        }
+
+        .bill-to h3 {
+            font-size: 12px;
+            margin: 0 0 5px 0;
+            text-transform: uppercase;
+        }
+
+        .meta-bar {
+            border: 1px solid #000;
+            padding: 8px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 11px;
+            background: #f9f9f9;
+        }
+
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #000;
+            border-top: none;
+            margin-bottom: 20px;
+        }
+
+        .invoice-table th {
+            border-bottom: 1px solid #000;
+            border-right: 1px solid #000;
+            padding: 8px;
+            text-align: center;
+            background: #f0f0f0;
+        }
+
+        .invoice-table td {
+            border-right: 1px solid #000;
+            padding: 10px;
+            vertical-align: top;
+        }
+
+        .invoice-table td:last-child,
+        .invoice-table th:last-child {
+            border-right: none;
+        }
+
+        .amount-col {
+            text-align: right;
+            width: 120px;
+        }
+
+        .sl-col {
+            text-align: center;
+            width: 40px;
+        }
+
+        .item-details p {
+            margin: 5px 0;
+        }
+
+        .item-row {
+            display: flex;
+        }
+
+        .item-label {
+            width: 120px;
+            font-weight: bold;
+        }
+
+        .totals-section {
+            border-top: 1px solid #000;
+            padding-top: 10px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 5px;
+        }
+
+        .total-label {
+            width: 150px;
+            text-align: right;
+            padding-right: 10px;
+            font-weight: bold;
+        }
+
+        .total-value {
+            width: 100px;
+            text-align: right;
+        }
+
+        .grand-total {
+            border-top: 1px solid #000;
+            border-bottom: 1px solid #000;
+            padding: 10px 0;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .amount-words {
+            border: 1px solid #000;
+            padding: 8px;
+            margin-top: 20px;
+            font-weight: bold;
+            background: #fff0f0;
+        }
+
+        .footer {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            font-size: 10px;
+        }
+
+        .signature {
+            text-align: center;
+        }
+
+        .billboard-img {
+            margin-top: 15px;
+            border: 1px solid #ddd;
+            padding: 5px;
+            max-width: 200px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <div>
+            <div class="company-name">SKY VIEW</div>
+            <div class="address">
+                12/454 ARPOOKARA, VILLOONNI-686008<br>
+                KOTTAYAM, skyview330@gmail.com<br>
+                <strong>Ph: 9447266404, 9495806837</strong>
+            </div>
+        </div>
+        <div class="tax-info">
+            <strong>HSN:</strong> 9989<br>
+            <strong>GSTIN:</strong> 32AHFPT0757R1ZR<br>
+            <strong>PAN:</strong> AHFPT0757R<br>
+            <strong>GST-REG:</strong> 32AHFPT0757R1ZR
+        </div>
+    </div>
+
+    <div class="invoice-title">TAX-INVOICE</div>
+
+    <div class="bill-to">
+        <h3>BILL TO PARTY</h3>
+        <div>{{ booking.customer_name }}</div>
+        <div>{{ booking.customer_email }}</div>
+        <div>Ph: {{ booking.customer_phone }}</div>
+    </div>
+
+    <div class="meta-bar">
+        <span>Your Order/Ref No: 20-9-25/{{ booking.id }}</span>
+        <span>Invoice No: {{ booking.id }}</span>
+        <span>Date: {{ booking.created_at|date:"d/m/Y" }}</span>
+    </div>
+
+    <table class="invoice-table">
+        <thead>
+            <tr>
+                <th class="sl-col">Sl No</th>
+                <th>PARTICULARS</th>
+                <th class="amount-col">Amount (Rs)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="sl-col">1.</td>
+                <td>
+                    <strong>Advertisement of the Hoarding</strong>
+                    <div class="item-details" style="margin-top: 10px;">
+                        <div class="item-row">
+                            <div class="item-label">Location</div>
+                            <div>: {{ booking.billboard.location }}</div>
+                        </div>
+                        <div class="item-row">
+                            <div class="item-label">Display</div>
+                            <div>: {{ booking.customer_name }}</div>
+                        </div>
+                        <div class="item-row">
+                            <div class="item-label">Hoarding Size</div>
+                            <div>: {{ booking.billboard.size }}</div>
+                        </div>
+                        <div class="item-row">
+                            <div class="item-label">Total Area</div>
+                            <div>: {{ booking.billboard.sqft }} Sq. Ft</div>
+                        </div>
+                        <div class="item-row">
+                            <div class="item-label">Duration</div>
+                            <div>: {{ booking.duration_months }} Months</div>
+                        </div>
+                        <div class="item-row">
+                            <div class="item-label">Period</div>
+                            <div>: ({{ booking.start_date|date:"d-m-Y" }} to {{ booking.end_date|date:"d-m-Y" }})</div>
+                        </div>
+                    </div>
+
+                    {% if booking.billboard.image %}
+                    <img src="{{ booking.billboard.image.url }}" class="billboard-img">
+                    {% endif %}
+                </td>
+                <td class="amount-col">
+                    <br><br><br><br><br><br>
+                    <strong>{{ base_amount }}</strong>
+                </td>
+            </tr>
+
+            <!-- Totals inside table or implied layout -->
+            <tr>
+                <td colspan="2" style="text-align: right; border-right: 1px solid #000;">
+                    <div class="total-row">
+                        <div class="total-label">Total Amount</div>
+                        <div class="total-value">{{ base_amount }}</div>
+                    </div>
+                    <div class="total-row">
+                        <div class="total-label">CGST (9%)</div>
+                        <div class="total-value">{{ tax_amount }}</div>
+                    </div>
+                    <div class="total-row">
+                        <div class="total-label">SGST (9%)</div>
+                        <div class="total-value">{{ tax_amount }}</div>
+                    </div>
+                    <div class="total-row grand-total">
+                        <div class="total-label">GRAND TOTAL</div>
+                        <div class="total-value">{{ booking.total_amount }}</div>
+                    </div>
+                </td>
+                <td class="amount-col"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="amount-words">
+        Rupees in word: {{ amount_in_words }} Only.
+    </div>
+
+    <div class="footer">
+        <div>
+            All payment should be strictly made by cash/draft/cheque favoring 'SKY VIEW'.
+        </div>
+        <div class="signature">
+            <strong>Authorised Signatory</strong><br>
+            For Sky View
+        </div>
+    </div>
+
+</body>
+
+</html>

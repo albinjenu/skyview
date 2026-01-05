@@ -1,0 +1,38 @@
+{% extends 'billboards/base.html' %}
+
+{% block content %}
+<div style="text-align: center; margin-bottom: 3rem;">
+    <h2 style="font-size: 2.5rem; color: var(--primary);">Premium Advertising Spaces</h2>
+    <p style="font-size: 1.1rem; color: #666;">Find the perfect location for your brand.</p>
+</div>
+
+<div class="grid">
+    {% for board in billboards %}
+    <div class="card">
+        <div style="height: 200px; overflow: hidden;">
+            {% if board.image %}
+            <img src="{{ board.image.url }}" alt="{{ board.title }}"
+                style="width: 100%; height: 100%; object-fit: cover;">
+            {% else %}
+            <div
+                style="width:100%; height:100%; background:#ddd; display:flex; align-items:center; justify-content:center;">
+                No Image</div>
+            {% endif %}
+        </div>
+        <div style="padding: 1.5rem;">
+            <h3 style="margin-top: 0; color: var(--primary);">{{ board.title }}</h3>
+            <p style="color: #666; font-size: 0.9rem;">{{ board.location }}</p>
+            <div
+                style="display: flex; justify-content: space-between; margin: 1rem 0; font-weight: bold; color: var(--text);">
+                <span>{{ board.size }}</span>
+                <span>{{ board.sqft }} sqft</span>
+            </div>
+            <a href="{% url 'billboard_detail' board.pk %}" class="btn"
+                style="width: 100%; text-align: center; box-sizing: border-box;">View Details</a>
+        </div>
+    </div>
+    {% empty %}
+    <p>No billboards available at the moment.</p>
+    {% endfor %}
+</div>
+{% endblock %}
