@@ -16,20 +16,43 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# =============================================================================
+# Environment Variable Loading
+# =============================================================================
+def get_env_variable(var_name, default=None):
+    """Get environment variable or return default value."""
+    return os.environ.get(var_name, default)
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+# Load from .env file if it exists
+env_file = BASE_DIR / '.env'
+if env_file.exists():
+    with open(env_file) as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith('#') and '=' in line:
+                key, value = line.split('=', 1)
+                os.environ.setdefault(key.strip(), value.strip())
+
+# =============================================================================
+# Security Settings
+# =============================================================================
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-6h29^eyh)v%f=5vv=9s=t2ot69jd+5!=(5^xfnbj5ti4ay9zx1'
+SECRET_KEY = get_env_variable('SECRET_KEY', 'django-insecure-change-me-in-production')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = get_env_variable('DEBUG', 'False').lower() in ('true', '1', 'yes')
 
-ALLOWED_HOSTS = []
+# Allowed Hosts
+ALLOWED_HOSTS = [
+    host.strip() 
+    for host in get_env_variable('ALLOWED_HOSTS', '').split(',') 
+    if host.strip()
+]
 
-
+# =============================================================================
 # Application definition
+# =============================================================================
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -72,7 +95,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'skyview_project.wsgi.application'
 
 
+# =============================================================================
 # Database
+# =============================================================================
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
@@ -83,7 +108,9 @@ DATABASES = {
 }
 
 
+# =============================================================================
 # Password validation
+# =============================================================================
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -102,30 +129,60 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# =============================================================================
 # Internationalization
+# =============================================================================
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# =============================================================================
+# Static and Media files
+# =============================================================================
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # For production collectstatic
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# =============================================================================
 # Default primary key field type
+# =============================================================================
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGOUT_REDIRECT_URL = '/'
+
+# =============================================================================
+# Production Security Settings (Applied when DEBUG=False)
+# =============================================================================
+
+if not DEBUG:
+    # HTTPS Settings
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    
+    # Cookie Security
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    
+    # HSTS (HTTP Strict Transport Security)
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    
+    # Content Security
+    X_FRAME_OPTIONS = 'DENY'
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_BROWSER_XSS_FILTER = True
